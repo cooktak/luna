@@ -8,6 +8,7 @@ import { UserService } from './user.service';
 import { UtilModule } from '@app/util';
 import { config } from '@app/config';
 import { entities } from '@app/entity';
+import { getConnection } from 'typeorm';
 
 describe('UserService', () => {
   const testUser: SignUpDto = {
@@ -31,6 +32,10 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
+  });
+
+  afterAll(async () => {
+    await getConnection().close();
   });
 
   it('should success signUp()', async () => {

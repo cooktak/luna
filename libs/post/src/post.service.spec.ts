@@ -4,6 +4,7 @@ import { PostService } from './post.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from '@app/config';
 import { entities } from '@app/entity';
+import { getConnection } from 'typeorm';
 
 describe('PostService', () => {
   let service: PostService;
@@ -19,6 +20,10 @@ describe('PostService', () => {
     }).compile();
 
     service = module.get<PostService>(PostService);
+  });
+
+  afterAll(async () => {
+    await getConnection().close();
   });
 
   it('should be defined', () => {
