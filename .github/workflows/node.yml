@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Use mariadb 10
+      - name: Use MariaDB 10
         uses: getong/mariadb-action@v1.1
         with:
           container port: ${{ env.MYSQL_PORT }}
