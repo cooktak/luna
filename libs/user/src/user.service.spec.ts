@@ -47,6 +47,7 @@ describe('UserService', () => {
     await expect(service.signUp(testUser)).rejects.toThrow();
 
     const foundUser: ResLoad = await service.load(accessToken);
+
     expect(new Date(testUser.birthday).toDateString()).toEqual(foundUser.birthday.toDateString());
     const [req, res] = TestUtilService.make_comparable(testUser, foundUser, [
       'birthday', 'createTime', 'password', 'userTag',
@@ -94,7 +95,21 @@ describe('UserService', () => {
     const { refreshToken }: ResSignIn = await service.signIn({
       password: testUser.password, username: user.username,
     });
+
     const { accessToken }: ResRefresh = await service.refresh(refreshToken);
+
+    await service.leave(accessToken);
+  });
+
+  it('should success signOut()', async () => {
+    const user: { username: string } = { username: `${testUser.username}_4` };
+    await service.signUp({ ...testUser, ...user });
+    const { accessToken, refreshToken }: ResSignIn = await service.signIn({
+      password: testUser.password, username: user.username,
+    });
+
+    await service.signOut(accessToken);
+    await expect(service.refresh(refreshToken)).rejects.toThrow();
 
     await service.leave(accessToken);
   });

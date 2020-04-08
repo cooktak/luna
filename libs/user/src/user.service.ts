@@ -61,8 +61,6 @@ export class UserService {
     const result: ResRefresh = {
       accessToken: this.utilService.createToken(username, TokenTypeEnum.access),
     };
-
-    const foundToken: Token = await this.tokenRepo.findOne({ refreshToken: token });
     await this.tokenRepo.update(foundToken.id, result);
     return result;
   }
@@ -99,6 +97,11 @@ export class UserService {
     }
 
     return result;
+  }
+
+  public async signOut(token: string): Promise<void> {
+    const foundToken: Token = await this.tokenRepo.findOne({ accessToken: token });
+    await this.tokenRepo.delete(foundToken);
   }
 
   public async signUp(payload: ReqSignUp): Promise<void> {

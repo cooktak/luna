@@ -71,6 +71,17 @@ export class UserController {
     }
   }
 
+  @Post('signin')
+  @ApiOperation({ summary: '로그 인' })
+  @ApiConflictResponse()
+  public async signIn(@Body(new ValidationPipe()) payload: SignInDto): Promise<ResSignIn> {
+    try {
+      return this.userService.signIn(payload);
+    } catch (e) {
+      throw new InternalServerErrorException(e.message);
+    }
+  }
+
   @Post('signup')
   @ApiOperation({ summary: '회원 가입' })
   @ApiHeader({ name: 'Authorization' })
