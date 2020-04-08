@@ -11,8 +11,10 @@ import { Repository } from 'typeorm';
 export class UserService {
   @InjectRepository(Token)
   private readonly tokenRepo: Repository<Token>;
+
   @InjectRepository(User)
   private readonly userRepo: Repository<User>;
+
   @Inject()
   private readonly utilService: UtilService;
 
