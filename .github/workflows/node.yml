@@ -5,8 +5,9 @@ env:
   CI: true
   ENCRYPTION: sha512
   MYSQL_DB: test
-  MYSQL_HOST: 3307
+  MYSQL_HOST: 0.0.0.0
   MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
+  MYSQL_PORT: 3307
   MYSQL_TYPE: mariadb
   MYSQL_USER: root
 
@@ -22,7 +23,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Use mariadb
+      - name: Use mariadb 10
         uses: getong/mariadb-action@v1.1
         with:
           container port: 3307
