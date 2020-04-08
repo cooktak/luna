@@ -1,0 +1,44 @@
+name: Node.js
+on: [push]
+
+env:
+  CI: true
+  ENCRYPTION: sha512
+  MYSQL_DB: test
+  MYSQL_HOST: 3307
+  MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
+  MYSQL_TYPE: mariadb
+  MYSQL_USER: root
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Use mariadb
+        uses: getong/mariadb-action@v1.1
+        with:
+          container port: 3307
+          host port: 3307
+          mysql root password: ${{ secrets.MYSQL_PASS }}
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-test-${{ matrix.node-version }}-${{ env.cache-name }}-
+            ${{ runner.OS }}-test-${{ matrix.node-version }}-
+            ${{ runner.OS }}-test-
+            ${{ runner.OS }}-
+      - name: Yarn install
+        run: yarn
+      - name: Test
+        run: yarn test
