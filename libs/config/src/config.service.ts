@@ -1,8 +1,8 @@
 import { IsEnum, IsNumberString, IsOptional, IsString, validateSync } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { NodeEnv } from './node-env.enum';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm/dist/interfaces/typeorm-options.interface';
-import { ValidationError } from 'class-validator/validation/ValidationError';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ValidationError } from 'class-validator';
 import { fileExistsSync } from 'tsconfig-paths/lib/filesystem';
 import { parse } from 'dotenv';
 import { readFileSync } from 'fs';
@@ -15,12 +15,10 @@ export class ConfigService {
   @IsString()
   public readonly ENCRYPTION: string;
 
-  @IsOptional()
-  @IsString()
+  @IsString() @IsOptional()
   public readonly HOST?: string;
 
-  @IsOptional()
-  @IsString()
+  @IsString() @IsOptional()
   public readonly JWT_SECRET?: string;
 
   @IsString()
@@ -32,12 +30,10 @@ export class ConfigService {
   @IsString()
   public readonly MYSQL_PASS: string;
 
-  @IsNumberString()
-  @IsOptional()
-  public readonly MYSQL_PORT: string;
+  @IsNumberString() @IsOptional()
+  public readonly MYSQL_PORT: string = '3306';
 
-  @IsString()
-  @IsOptional()
+  @IsString() @IsOptional()
   public readonly MYSQL_TYPE: 'mysql' | 'mariadb' = 'mysql';
 
   @IsString()
@@ -46,9 +42,9 @@ export class ConfigService {
   @IsEnum(NodeEnv)
   public readonly NODE_ENV: NodeEnv;
 
-  @IsOptional()
-  @IsNumberString()
+  @IsOptional() @IsNumberString()
   public readonly PORT?: string;
+
   public readonly ormConfig: TypeOrmModuleOptions;
 
   public constructor(filePath?: string, customConfig?: Config) {
