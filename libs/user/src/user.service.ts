@@ -58,6 +58,12 @@ export class UserService {
 
   public async refresh(token: string): Promise<ResRefresh> {
     const username: string = this.utilService.getUsernameByToken(token);
+    const foundToken: Token = await this.tokenRepo.findOne({ refreshToken: token });
+
+    if (!username || !foundToken) {
+      throw new ForbiddenException();
+    }
+
     const result: ResRefresh = {
       accessToken: this.utilService.createToken(username, TokenTypeEnum.access),
     };

@@ -71,6 +71,17 @@ export class UserController {
     }
   }
 
+  @Post('signout')
+  @ApiOperation({ summary: '로그 아웃' })
+  @ApiConflictResponse()
+  public async signOut(@Headers() header: Header): Promise<void> {
+    try {
+      return this.userService.signOut(this.utilService.getTokenBody(header));
+    } catch (e) {
+      throw new InternalServerErrorException(e.message);
+    }
+  }
+
   @Post('signin')
   @ApiOperation({ summary: '로그 인' })
   @ApiConflictResponse()
@@ -89,17 +100,6 @@ export class UserController {
   public async signUp(@Body(new ValidationPipe()) payload: SignUpDto): Promise<void> {
     try {
       return this.userService.signUp(payload);
-    } catch (e) {
-      throw new InternalServerErrorException(e.message);
-    }
-  }
-
-  @Post('signin')
-  @ApiOperation({ summary: '로그인' })
-  @ApiConflictResponse()
-  public async signIn(@Body(new ValidationPipe()) payload: SignInDto): Promise<ResSignIn> {
-    try {
-      return this.userService.signIn(payload);
     } catch (e) {
       throw new InternalServerErrorException(e.message);
     }
