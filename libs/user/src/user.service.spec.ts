@@ -2,15 +2,16 @@ import { EditDto, SignUpDto } from './dto';
 import { ResLoad, ResRefresh, ResSignIn } from './res';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TestUtilModule, TestUtilService } from '@app/test-util';
+import { INestApplication } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user.module';
 import { UserService } from './user.service';
 import { UtilModule } from '@app/util';
 import { config } from '@app/config';
 import { entities } from '@app/entity';
-import { getConnection } from 'typeorm';
 
 describe('UserService', () => {
+  let app: INestApplication;
   const testUser: SignUpDto = {
     birthday: new Date().toISOString(),
     gender: 'M',
@@ -31,11 +32,13 @@ describe('UserService', () => {
       providers: [UserService],
     }).compile();
 
+    app = module.createNestApplication();
+
     service = module.get<UserService>(UserService);
   });
 
   afterAll(async () => {
-    await getConnection().close();
+    await app.close();
   });
 
   it('should success signUp()', async () => {
