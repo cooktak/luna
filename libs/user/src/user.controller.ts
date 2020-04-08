@@ -71,7 +71,7 @@ export class UserController {
     }
   }
 
-  @Post('signout')
+  @Delete('signout')
   @ApiOperation({ summary: '로그 아웃' })
   @ApiConflictResponse()
   public async signOut(@Headers() header: Header): Promise<void> {
