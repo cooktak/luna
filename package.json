@@ -19,6 +19,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.5",
+    "search-product-korea": "^1.1.2",
     "serialize-javascript": "^3.0.0",
     "swagger-ui-express": "^4.1.4",
     "typeorm": "^0.2.24"

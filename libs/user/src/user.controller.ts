@@ -1,6 +1,6 @@
 import {
-  ApiConflictResponse, ApiForbiddenResponse,
-  ApiHeader, ApiOperation, ApiTags,
+  ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse,
+  ApiHeader, ApiOkResponse, ApiOperation, ApiTags,
 } from '@nestjs/swagger';
 import {
   Body, Controller, Delete, Get, Headers,
@@ -24,6 +24,7 @@ export class UserController {
   @Patch('edit')
   @ApiOperation({ summary: '회원 수정' })
   @ApiHeader({ name: 'Authorization' })
+  @ApiOkResponse()
   @ApiForbiddenResponse()
   public async edit(
     @Headers() header: Header,
@@ -39,6 +40,7 @@ export class UserController {
   @Delete('leave')
   @ApiOperation({ summary: '회원 탈퇴' })
   @ApiHeader({ name: 'Authorization' })
+  @ApiOkResponse()
   @ApiForbiddenResponse()
   public async leave(@Headers() header: Header): Promise<void> {
     try {
@@ -51,6 +53,7 @@ export class UserController {
   @Get('load')
   @ApiOperation({ summary: '회원 탈퇴' })
   @ApiHeader({ name: 'Authorization' })
+  @ApiOkResponse({ type: ResLoad })
   @ApiForbiddenResponse()
   public async load(@Headers() header: Header): Promise<ResLoad> {
     try {
@@ -63,6 +66,8 @@ export class UserController {
   @Get('refresh')
   @ApiOperation({ summary: '토큰 재발급' })
   @ApiHeader({ name: 'X-Refresh-Token' })
+  @ApiOkResponse({ type: ResRefresh })
+  @ApiForbiddenResponse()
   public async refresh(@Headers() header: Header): Promise<ResRefresh> {
     try {
       return this.userService.refresh(this.utilService.getTokenBody(header));
@@ -71,19 +76,9 @@ export class UserController {
     }
   }
 
-  @Delete('signout')
-  @ApiOperation({ summary: '로그 아웃' })
-  @ApiConflictResponse()
-  public async signOut(@Headers() header: Header): Promise<void> {
-    try {
-      return this.userService.signOut(this.utilService.getTokenBody(header));
-    } catch (e) {
-      throw new InternalServerErrorException(e.message);
-    }
-  }
-
   @Post('signin')
   @ApiOperation({ summary: '로그 인' })
+  @ApiOkResponse({ type: ResSignIn })
   @ApiConflictResponse()
   public async signIn(@Body(new ValidationPipe()) payload: SignInDto): Promise<ResSignIn> {
     try {
@@ -93,9 +88,23 @@ export class UserController {
     }
   }
 
+  @Delete('signout')
+  @ApiOperation({ summary: '로그 아웃' })
+  @ApiHeader({ name: 'Authorization' })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  public async signOut(@Headers() header: Header): Promise<void> {
+    try {
+      return this.userService.signOut(this.utilService.getTokenBody(header));
+    } catch (e) {
+      throw new InternalServerErrorException(e.message);
+    }
+  }
+
   @Post('signup')
   @ApiOperation({ summary: '회원 가입' })
   @ApiHeader({ name: 'Authorization' })
+  @ApiCreatedResponse()
   @ApiConflictResponse()
   public async signUp(@Body(new ValidationPipe()) payload: SignUpDto): Promise<void> {
     try {
