@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { GenderEnum } from '@app/entity';
 
 export class ResLoad {
   @ApiProperty()
@@ -8,7 +9,7 @@ export class ResLoad {
   public createTime: Date;
 
   @ApiProperty()
-  public gender: 'M' | 'F';
+  public gender: GenderEnum;
 
   @ApiProperty()
   public nickname: string;

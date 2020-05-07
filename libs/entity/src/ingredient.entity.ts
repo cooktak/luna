@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { PostIngredient } from './post-ingredient.entity';
 
 @Entity()
 export class Ingredient {
@@ -8,6 +9,16 @@ export class Ingredient {
   @Column()
   public name: string;
 
-  @ManyToOne(() => Ingredient, (ingredient: Ingredient) => ingredient.id)
-  public parent: Ingredient[];
+  @ManyToOne(
+    () => Ingredient,
+    (ingredient: Ingredient) => ingredient.id,
+    { nullable: true },
+  )
+  public parent: Ingredient;
+
+  @OneToMany(
+    () => PostIngredient,
+    (postIngredient: PostIngredient) => postIngredient.ingredient,
+  )
+  public posts: PostIngredient[];
 }

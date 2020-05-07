@@ -1,4 +1,5 @@
 import { EditDto, SignUpDto } from './dto';
+import { GenderEnum, entities } from '@app/entity';
 import { ResLoad, ResRefresh, ResSignIn } from './res';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TestUtilModule, TestUtilService } from '@app/test-util';
@@ -7,16 +8,16 @@ import { UserModule } from './user.module';
 import { UserService } from './user.service';
 import { UtilModule } from '@app/util';
 import { config } from '@app/config';
-import { entities } from '@app/entity';
 import { getConnection } from 'typeorm';
 
 describe('UserService', () => {
   const testUser: SignUpDto = {
     birthday: new Date().toISOString(),
-    gender: 'M',
+    gender: GenderEnum.F,
     nickname: 'testUser',
     password: 'testUser',
-    username: 'testUser',
+    photoLink: 'https://image.link.page',
+    username: 'testUser'
   };
   let service: UserService;
 
@@ -68,10 +69,11 @@ describe('UserService', () => {
 
     const editData: EditDto = {
       birthday: new Date().toISOString(),
-      gender: 'F',
+      gender: GenderEnum.F,
       newPassword: `${testUser.password}_2`,
       nickname: `${testUser.nickname}_2`,
       password: testUser.password,
+      photoLink: 'https://image.link.com',
     };
 
     await service.edit(accessToken, { ...editData });

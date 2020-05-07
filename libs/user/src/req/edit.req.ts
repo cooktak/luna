@@ -1,5 +1,10 @@
+import { GenderEnum } from '@app/entity';
+
 export class ReqEdit {
-  public readonly password?: string;
-  public readonly nickname?: string;
-  public readonly birthday?: string;
+  public birthday?: string;
+  public gender?: GenderEnum;
+  public newPassword?: string;
+  public nickname?: string;
+  public password: string;
+  public photoLink?: string;
 }
