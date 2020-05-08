@@ -1,3 +1,6 @@
 export enum GenderEnum {
-  E = 'E', F = 'F', M = 'M', X = 'X'
+  etc = 'etc',
+  female = 'female',
+  male = 'male',
+  private = 'private',
 }
