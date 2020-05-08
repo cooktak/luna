@@ -11,7 +11,7 @@ export class Product {
   public info: string;
 
   @Column()
-  public kanProductCategoryCode: string;
+  public KANProductCategoryCode: string;
 
   @Column()
   public name: string;
