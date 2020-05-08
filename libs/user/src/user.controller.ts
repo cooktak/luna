@@ -18,6 +18,7 @@ import {
   InternalServerErrorException,
   Patch,
   Post,
+  Put,
   ValidationPipe,
 } from '@nestjs/common';
 import { EditDto, SignInDto, SignUpDto } from './dto';
@@ -34,7 +35,7 @@ export class UserController {
   @Inject()
   private readonly utilService: UtilService;
 
-  @Patch('edit')
+  @Patch()
   @ApiOperation({ summary: '회원 수정' })
   @ApiBearerAuth()
   @ApiOkResponse()
@@ -50,7 +51,7 @@ export class UserController {
     }
   }
 
-  @Delete('leave')
+  @Delete()
   @ApiOperation({ summary: '회원 탈퇴' })
   @ApiBearerAuth()
   @ApiOkResponse()
@@ -63,7 +64,7 @@ export class UserController {
     }
   }
 
-  @Get('load')
+  @Get()
   @ApiOperation({ summary: '회원 정보 불러오기' })
   @ApiBearerAuth()
   @ApiOkResponse({ type: ResLoad })
@@ -89,8 +90,8 @@ export class UserController {
     }
   }
 
-  @Post('signin')
-  @ApiOperation({ summary: '로그 인' })
+  @Post('token')
+  @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: ResSignIn })
   @ApiConflictResponse()
   public async signIn(@Body(new ValidationPipe()) payload: SignInDto): Promise<ResSignIn> {
@@ -101,8 +102,8 @@ export class UserController {
     }
   }
 
-  @Delete('signout')
-  @ApiOperation({ summary: '로그 아웃' })
+  @Delete('token')
+  @ApiOperation({ summary: '로그아웃' })
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiForbiddenResponse()
@@ -114,7 +115,7 @@ export class UserController {
     }
   }
 
-  @Post('signup')
+  @Put()
   @ApiOperation({ summary: '회원 가입' })
   @ApiCreatedResponse()
   @ApiConflictResponse()
