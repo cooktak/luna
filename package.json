@@ -58,6 +58,8 @@
       "ts"
     ],
     "moduleNameMapper": {
+      "@app/auth": "<rootDir>/libs/auth/src",
+      "@app/auth/(.*)": "<rootDir>/libs/auth/src/$1",
       "@app/config": "<rootDir>/libs/config/src",
       "@app/config/(.*)": "<rootDir>/libs/config/src/$1",
       "@app/entity": "<rootDir>/libs/entity/src",

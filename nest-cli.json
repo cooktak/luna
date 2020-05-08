@@ -57,6 +57,15 @@
       "root": "libs/util",
       "sourceRoot": "libs/util/src",
       "type": "library"
+    },
+    "auth": {
+      "type": "library",
+      "root": "libs/auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auth/tsconfig.lib.json"
+      }
     }
   },
   "sourceRoot": "src"

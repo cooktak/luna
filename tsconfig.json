@@ -25,6 +25,9 @@
       ],
       "@app/util": [
         "libs/util/src"
+      ],
+      "@app/auth": [
+        "libs/auth/src"
       ]
     },
     "removeComments": true,

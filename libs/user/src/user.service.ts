@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ReqSignIn, ReqSignUp } from './req';
 import { ResLoad, ResRefresh, ResSignIn } from './res';
 import { Token, User } from '@app/entity';
@@ -43,12 +43,17 @@ export class UserService {
     await this.userRepo.remove(foundUser);
   }
 
-  public async load(token: string): Promise<ResLoad> {
-    const username: string = this.utilService.getUsernameByToken(token);
+  public async get(username: string): Promise<User> {
     const foundUser: User = await this.userRepo.findOne({ username });
     if (!foundUser) {
-      throw new ForbiddenException();
+      throw new NotFoundException();
     }
+    return foundUser;
+  }
+
+  public async load(token: string): Promise<ResLoad> {
+    const username: string = this.utilService.getUsernameByToken(token);
+    const foundUser: User = await this.get(username);
 
     for (const e of ['id', 'password']) {
       Reflect.deleteProperty(foundUser, e);
