@@ -1,21 +1,26 @@
-import { IsEmail, IsISO8601, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsEmail, IsEnum, IsISO8601, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { GenderEnum } from '@app/entity';
 
 export class SignUpDto {
   @ApiProperty({
     description: '생년월일',
-    example: '2019-12-08T05:15:42.000Z',
+    example: new Date().toISOString(),
   })
   @IsISO8601()
   public birthday: string;
 
-  @ApiProperty({ description: '성별 (M or F)' })
-  @IsString()
+  @ApiProperty({
+    default: GenderEnum.private,
+    description: '성별 (M or F)',
+    enum: GenderEnum,
+  })
+  @IsEnum(GenderEnum)
   public gender: GenderEnum;
 
   @ApiProperty({ description: '닉네임 (max 16자)' })
   @IsString()
+  @MaxLength(16)
   public nickname: string;
 
   @ApiProperty({ description: '비밀번호' })
@@ -27,7 +32,10 @@ export class SignUpDto {
   @IsOptional()
   public photoLink?: string;
 
-  @ApiProperty({ description: '사용자 ID (이메일)' })
+  @ApiProperty({
+    description: '사용자 ID (이메일)',
+    example: 'user@domain.com',
+  })
   @IsEmail()
   public username: string;
 }

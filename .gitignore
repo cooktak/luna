@@ -253,3 +253,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# DataGrip
+.idea/dataSources.local.xml
+.idea/dataSources/**/*

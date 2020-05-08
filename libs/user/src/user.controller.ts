@@ -1,11 +1,24 @@
 import {
-  ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse,
-  ApiHeader, ApiOkResponse, ApiOperation, ApiTags,
+  ApiBearerAuth,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiHeader,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger';
 import {
-  Body, Controller, Delete, Get, Headers,
-  Inject, InternalServerErrorException,
-  Patch, Post, ValidationPipe,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  Inject,
+  InternalServerErrorException,
+  Patch,
+  Post,
+  ValidationPipe,
 } from '@nestjs/common';
 import { EditDto, SignInDto, SignUpDto } from './dto';
 import { Header, UtilService } from '@app/util';
@@ -23,7 +36,7 @@ export class UserController {
 
   @Patch('edit')
   @ApiOperation({ summary: '회원 수정' })
-  @ApiHeader({ name: 'Authorization' })
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiForbiddenResponse()
   public async edit(
@@ -39,7 +52,7 @@ export class UserController {
 
   @Delete('leave')
   @ApiOperation({ summary: '회원 탈퇴' })
-  @ApiHeader({ name: 'Authorization' })
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiForbiddenResponse()
   public async leave(@Headers() header: Header): Promise<void> {
@@ -51,8 +64,8 @@ export class UserController {
   }
 
   @Get('load')
-  @ApiOperation({ summary: '회원 탈퇴' })
-  @ApiHeader({ name: 'Authorization' })
+  @ApiOperation({ summary: '회원 정보 불러오기' })
+  @ApiBearerAuth()
   @ApiOkResponse({ type: ResLoad })
   @ApiForbiddenResponse()
   public async load(@Headers() header: Header): Promise<ResLoad> {
@@ -90,7 +103,7 @@ export class UserController {
 
   @Delete('signout')
   @ApiOperation({ summary: '로그 아웃' })
-  @ApiHeader({ name: 'Authorization' })
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiForbiddenResponse()
   public async signOut(@Headers() header: Header): Promise<void> {
@@ -103,7 +116,6 @@ export class UserController {
 
   @Post('signup')
   @ApiOperation({ summary: '회원 가입' })
-  @ApiHeader({ name: 'Authorization' })
   @ApiCreatedResponse()
   @ApiConflictResponse()
   public async signUp(@Body(new ValidationPipe()) payload: SignUpDto): Promise<void> {

@@ -15,6 +15,7 @@ import { config } from '@app/config';
     .setTitle('luna')
     .setDescription('cooktak API Server')
     .setVersion(process.env.npm_package_version)
+    .addBearerAuth()
     .build();
   const document: OpenAPIObject = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
