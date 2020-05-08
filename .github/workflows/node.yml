@@ -5,7 +5,7 @@ env:
   CI: true
   ENCRYPTION: sha512
   MYSQL_DB: cooktak_test
-  MYSQL_HOST: 0.0.0.0
+  MYSQL_HOST: localhost
   MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
   MYSQL_PORT: 3307
   MYSQL_TYPE: mariadb
@@ -13,10 +13,11 @@ env:
 
 jobs:
   test:
+    name: Unit tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 14.x]
     steps:
       - uses: actions/checkout@v1
       - name: use node.js ${{ matrix.node-version }}
@@ -30,15 +31,18 @@ jobs:
           host port: ${{ env.MYSQL_PORT }}
           mysql root password: ${{ env.MYSQL_PASS }}
           mysql database: ${{ env.MYSQL_DB }}
-      - name: cache node modules
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache yarn
         uses: actions/cache@v1
         with:
-          path: node_modules
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.OS }}-build-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-test-${{ matrix.node-version }}-${{ env.cache-name }}-
-            ${{ runner.OS }}-test-${{ matrix.node-version }}-
-            ${{ runner.OS }}-test-
+            ${{ runner.OS }}-build-${{ matrix.node-version }}-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-${{ matrix.node-version }}-
+            ${{ runner.OS }}-build-
             ${{ runner.OS }}-
       - name: yarn install
         run: yarn
