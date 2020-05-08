@@ -89,6 +89,7 @@ module.exports = {
     'sort-class-members/sort-class-members': 'error',
     'sort-vars': 'error',
     'sort-keys': 'error',
+    'sort-imports': 'error',
   },
   plugins: [
     '@typescript-eslint/eslint-plugin',
