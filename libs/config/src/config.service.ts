@@ -1,10 +1,10 @@
-import { IsEnum, IsNumberString, IsOptional, IsString, validateSync } from 'class-validator';
+import { IsEnum, IsNumberString, IsOptional, IsString, ValidationError, validateSync } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { NodeEnv } from './node-env.enum';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ValidationError } from 'class-validator';
 import { fileExistsSync } from 'tsconfig-paths/lib/filesystem';
 import { parse } from 'dotenv';
+import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -13,34 +13,22 @@ export type Config = Record<string, string>;
 @Injectable()
 export class ConfigService {
   @IsString()
-  public readonly ENCRYPTION: string;
+  public readonly ENCRYPTION: string = 'HS256';
 
   @IsString() @IsOptional()
   public readonly HOST?: string;
 
   @IsString() @IsOptional()
-  public readonly JWT_SECRET?: string;
-
-  @IsString()
-  public readonly MYSQL_DB: string;
-
-  @IsString()
-  public readonly MYSQL_HOST: string;
-
-  @IsString()
-  public readonly MYSQL_PASS: string;
-
-  @IsNumberString() @IsOptional()
-  public readonly MYSQL_PORT: string = '3306';
+  public readonly JWT_SECRET: string = randomBytes(16).toString();
 
   @IsString() @IsOptional()
-  public readonly MYSQL_TYPE: 'mysql' | 'mariadb' = 'mysql';
-
-  @IsString()
-  public readonly MYSQL_USER: string;
+  public readonly DB_TYPE: 'mysql' | 'mariadb' = 'mysql';
 
   @IsEnum(NodeEnv)
   public readonly NODE_ENV: NodeEnv;
+
+  @IsString()
+  public readonly DATABASE_URL: string;
 
   @IsOptional() @IsNumberString()
   public readonly PORT?: string;
@@ -61,13 +49,9 @@ export class ConfigService {
     }
 
     this.ormConfig = {
-      database: this.MYSQL_DB,
-      host: this.MYSQL_HOST,
-      password: this.MYSQL_PASS,
-      port: parseInt(this.MYSQL_PORT, 10),
-      synchronize: true,
-      type: this.MYSQL_TYPE,
-      username: this.MYSQL_USER,
+      database: /\/.*$/i.exec(this.DATABASE_URL)[0],
+      type: this.DB_TYPE,
+      url: this.DATABASE_URL,
     };
   }
 }
