@@ -4,6 +4,7 @@ on: [push]
 env:
   CI: true
   ENCRYPTION: sha512
+  DATABASE_URL: "mysql://root:${{ secrets.MYSQL_PASS }}@localhost:3307/cooktak_test"
   MYSQL_DB: cooktak_test
   MYSQL_HOST: localhost
   MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
