@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Product } from './product.entity';
+import { ProductEntity } from './product.entity';
 
-@Entity()
-export class Seller {
+@Entity('seller')
+export class SellerEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -10,8 +10,8 @@ export class Seller {
   public name: string;
 
   @OneToMany(
-    () => Product,
-    (product: Product) => product.seller,
+    () => ProductEntity,
+    (product: ProductEntity) => product.seller,
   )
-  public products: Product[];
+  public products: ProductEntity[];
 }

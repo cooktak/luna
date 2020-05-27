@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { Seller } from './seller.entity';
-import { Vendor } from './vendor.entity';
+import { SellerEntity } from './seller.entity';
+import { VendorEntity } from './vendor.entity';
 
-@Entity()
-export class Product {
+@Entity('product')
+export class ProductEntity {
   @PrimaryColumn()
   public id: string;
 
@@ -25,11 +25,11 @@ export class Product {
   @Column()
   public wight: string;
 
-  @ManyToOne(() => Seller, { nullable: false })
+  @ManyToOne(() => SellerEntity, { nullable: false })
   @JoinColumn({ name: 'sellerId' })
-  public seller: Seller;
+  public seller: SellerEntity;
 
-  @ManyToOne(() => Vendor, { nullable: false })
+  @ManyToOne(() => VendorEntity, { nullable: false })
   @JoinColumn({ name: 'vendorId' })
-  public vendor: Vendor;
+  public vendor: VendorEntity;
 }

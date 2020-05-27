@@ -3,15 +3,15 @@ import {
   JoinTable, ManyToMany, ManyToOne,
   OneToMany, PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Cookery } from './cookery.entity';
-import { FoodType } from './food-type.entity';
-import { PostContent } from './post-content.entity';
-import { PostIngredient } from './post-ingredient.entity';
-import { Product } from './product.entity';
-import { User } from './user.entity';
+import { CookeryEntity } from './cookery.entity';
+import { FoodTypeEntity } from './food-type.entity';
+import { PostContentEntity } from './post-content.entity';
+import { PostIngredientEntity } from './post-ingredient.entity';
+import { ProductEntity } from './product.entity';
+import { UserEntity } from './user.entity';
 
-@Entity()
-export class Post {
+@Entity('post')
+export class PostEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -22,33 +22,33 @@ export class Post {
   public title: string;
 
   @ManyToOne(
-    () => User,
-    (user: User) => user.posts,
+    () => UserEntity,
+    (user: UserEntity) => user.posts,
     { nullable: false },
   )
-  public user: User;
+  public user: UserEntity;
 
   @OneToMany(
-    () => PostIngredient,
-    (postIngredient: PostIngredient) => postIngredient.post,
+    () => PostIngredientEntity,
+    (postIngredient: PostIngredientEntity) => postIngredient.post,
   )
-  public ingredients: PostIngredient[];
+  public ingredients: PostIngredientEntity[];
 
   @OneToMany(
-    () => PostContent,
-    (postContent: PostContent) => postContent.post,
+    () => PostContentEntity,
+    (postContent: PostContentEntity) => postContent.post,
   )
-  public postContents: PostContent[];
+  public postContents: PostContentEntity[];
 
-  @ManyToMany(() => Cookery)
+  @ManyToMany(() => CookeryEntity)
   @JoinTable({ name: 'post_cookery' })
-  public cookeries: Cookery[];
+  public cookeries: CookeryEntity[];
 
-  @ManyToMany(() => FoodType)
+  @ManyToMany(() => FoodTypeEntity)
   @JoinTable({ name: 'post_food_type' })
-  public foodTypes: FoodType[];
+  public foodTypes: FoodTypeEntity[];
 
-  @ManyToMany(() => Product)
+  @ManyToMany(() => ProductEntity)
   @JoinTable({ name: 'post_product' })
-  public products: Product[];
+  public products: ProductEntity[];
 }

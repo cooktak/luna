@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { Ingredient } from './ingredient.entity';
-import { Post } from './post.entity';
+import { IngredientEntity } from './ingredient.entity';
+import { PostEntity } from './post.entity';
 
-@Entity()
-export class PostIngredient {
+@Entity('post_ingredient')
+export class PostIngredientEntity {
   @PrimaryColumn()
   public ingredientId: number;
 
@@ -16,11 +16,11 @@ export class PostIngredient {
   @Column()
   public unit: string;
 
-  @ManyToOne(() => Ingredient, (ingredient: Ingredient) => ingredient.posts)
+  @ManyToOne(() => IngredientEntity, (ingredient: IngredientEntity) => ingredient.posts)
   @JoinColumn({ name: 'ingredientId' })
-  public ingredient: Ingredient;
+  public ingredient: IngredientEntity;
 
-  @ManyToOne(() => Post, (post: Post) => post.ingredients)
+  @ManyToOne(() => PostEntity, (post: PostEntity) => post.ingredients)
   @JoinColumn({ name: 'postId' })
-  public post: Post;
+  public post: PostEntity;
 }

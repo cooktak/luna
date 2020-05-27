@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { GenderEnum } from './enum';
-import { Post } from './post.entity';
+import { PostEntity } from './post.entity';
 
-@Entity()
-export class User {
+@Entity('user')
+export class UserEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -31,6 +31,6 @@ export class User {
   @Column()
   public userTag: number;
 
-  @OneToMany(() => Post, (post: Post) => post.user)
-  public posts: Post[];
+  @OneToMany(() => PostEntity, (post: PostEntity) => post.user)
+  public posts: PostEntity[];
 }
