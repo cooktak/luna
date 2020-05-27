@@ -4,13 +4,13 @@ on: [push]
 env:
   CI: true
   ENCRYPTION: sha512
-  DATABASE_URL: "mysql://root:${{ secrets.MYSQL_PASS }}@localhost:3307/cooktak_test"
-  MYSQL_DB: cooktak_test
-  MYSQL_HOST: localhost
-  MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
-  MYSQL_PORT: 3307
-  MYSQL_TYPE: mariadb
-  MYSQL_USER: root
+  DB_TYPE: mariadb
+  DB_HOST: localhost
+  DB_PASS: ${{ secrets.DB_PASS }}
+  DB_PORT: 3307
+  DB_USER: root
+  DB_DB: cooktak_test
+  DB_URL: mysql://${{ env.DB_USER }}:${{ secrets.DB_PASS }}@${{ env.DB_HOST }}:${{ env.DB_PORT }}/${{ env.DB_DB }}
 
 jobs:
   test:
@@ -28,10 +28,10 @@ jobs:
       - name: use mariadb 10
         uses: getong/mariadb-action@v1.1
         with:
-          container port: ${{ env.MYSQL_PORT }}
-          host port: ${{ env.MYSQL_PORT }}
-          mysql root password: ${{ env.MYSQL_PASS }}
-          mysql database: ${{ env.MYSQL_DB }}
+          container port: ${{ env.DB_PORT }}
+          host port: ${{ env.DB_PORT }}
+          mysql root password: ${{ env.DB_PASS }}
+          mysql database: ${{ env.DB_DB }}
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
