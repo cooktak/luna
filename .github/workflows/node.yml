@@ -10,11 +10,10 @@ env:
   DB_PORT: 3307
   DB_USER: root
   DB_DB: cooktak_test
+  DB_URL: mysql://root:${{ secrets.DB_PASS }}@localhost:3307/cooktak_test
 
 jobs:
   test:
-    env:
-      DB_URL: mysql://${{ env.DB_USER }}:${{ secrets.DB_PASS }}@${{ env.DB_HOST }}:${{ env.DB_PORT }}/${{ env.DB_DB }}
     name: Unit tests
     runs-on: ubuntu-latest
     strategy:
