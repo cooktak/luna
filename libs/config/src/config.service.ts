@@ -28,7 +28,7 @@ export class ConfigService {
   public readonly NODE_ENV: NodeEnv;
 
   @IsString()
-  public readonly DATABASE_URL: string;
+  public readonly DB_URL: string;
 
   @IsOptional() @IsNumberString()
   public readonly PORT?: string;
@@ -49,9 +49,10 @@ export class ConfigService {
     }
 
     this.ormConfig = {
-      database: /\/.*$/i.exec(this.DATABASE_URL)[0],
+      database: /\/.*$/i.exec(this.DB_URL)[0],
+      synchronize: true,
       type: this.DB_TYPE,
-      url: this.DATABASE_URL,
+      url: this.DB_URL,
     };
   }
 }

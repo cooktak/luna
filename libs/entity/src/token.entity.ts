@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 
-@Entity()
-export class Token {
+@Entity('token')
+export class TokenEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -12,8 +12,8 @@ export class Token {
   @Column()
   public refreshToken: string;
 
-  @OneToOne(() => User, { nullable: false })
+  @OneToOne(() => UserEntity, { nullable: false })
   @JoinColumn({ name: 'userId' })
-  public user: User;
+  public user: UserEntity;
 
 }

@@ -1,16 +1,16 @@
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
-import { Token, User } from '@app/entity';
+import { TokenEntity, UserEntity } from '@app/entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UtilService } from '@app/util';
 
 @Injectable()
 export class AppGuard implements CanActivate {
-  @InjectRepository(Token)
-  private readonly tokenRepo: Repository<Token>;
+  @InjectRepository(TokenEntity)
+  private readonly tokenRepo: Repository<TokenEntity>;
 
-  @InjectRepository(User)
-  private readonly userRepo: Repository<User>;
+  @InjectRepository(UserEntity)
+  private readonly userRepo: Repository<UserEntity>;
 
   @Inject()
   private readonly utilService: UtilService;
@@ -27,8 +27,8 @@ export class AppGuard implements CanActivate {
     }
 
     try {
-      const foundUser: User = await this.userRepo.findOne({ username });
-      const foundToken: Token = await this.tokenRepo.findOne({ user: foundUser });
+      const foundUser: UserEntity = await this.userRepo.findOne({ username });
+      const foundToken: TokenEntity = await this.tokenRepo.findOne({ user: foundUser });
 
       if (foundToken.accessToken === token ||
         foundToken.refreshToken === token) {

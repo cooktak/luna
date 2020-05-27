@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { PostIngredient } from './post-ingredient.entity';
+import { PostIngredientEntity } from './post-ingredient.entity';
 
-@Entity()
-export class Ingredient {
+@Entity('ingredient')
+export class IngredientEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -10,15 +10,15 @@ export class Ingredient {
   public name: string;
 
   @ManyToOne(
-    () => Ingredient,
-    (ingredient: Ingredient) => ingredient.id,
+    () => IngredientEntity,
+    (ingredient: IngredientEntity) => ingredient.id,
     { nullable: true },
   )
-  public parent: Ingredient;
+  public parent: IngredientEntity;
 
   @OneToMany(
-    () => PostIngredient,
-    (postIngredient: PostIngredient) => postIngredient.ingredient,
+    () => PostIngredientEntity,
+    (postIngredient: PostIngredientEntity) => postIngredient.ingredient,
   )
-  public posts: PostIngredient[];
+  public posts: PostIngredientEntity[];
 }

@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Post } from './post.entity';
+import { PostEntity } from './post.entity';
 
-@Entity()
-export class PostContent {
+@Entity('post_content')
+export class PostContentEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -13,9 +13,9 @@ export class PostContent {
   public photoLink: string;
 
   @ManyToOne(
-    () => Post,
-    (post: Post) => post.postContents,
+    () => PostEntity,
+    (post: PostEntity) => post.postContents,
     { nullable: false },
   )
-  public post: Post;
+  public post: PostEntity;
 }

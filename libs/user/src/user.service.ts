@@ -1,7 +1,7 @@
 import { ConflictException, ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ReqSignIn, ReqSignUp } from './req';
 import { ResLoad, ResRefresh, ResSignIn } from './res';
-import { Token, User } from '@app/entity';
+import { TokenEntity, UserEntity } from '@app/entity';
 import { TokenTypeEnum, UtilService } from '@app/util';
 import { EditDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,18 +9,18 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  @InjectRepository(Token)
-  private readonly tokenRepo: Repository<Token>;
+  @InjectRepository(TokenEntity)
+  private readonly tokenRepo: Repository<TokenEntity>;
 
-  @InjectRepository(User)
-  private readonly userRepo: Repository<User>;
+  @InjectRepository(UserEntity)
+  private readonly userRepo: Repository<UserEntity>;
 
   @Inject()
   private readonly utilService: UtilService;
 
   public async edit(token: string, payload: EditDto): Promise<void> {
     const username: string = this.utilService.getUsernameByToken(token);
-    const foundUser: User = await this.userRepo.findOne({ username });
+    const foundUser: UserEntity = await this.userRepo.findOne({ username });
     if (!foundUser || this.utilService.encode(payload.password) !== foundUser.password) {
       throw new ForbiddenException();
     }
@@ -35,8 +35,8 @@ export class UserService {
 
   public async leave(token: string): Promise<void> {
     const username: string = this.utilService.getUsernameByToken(token);
-    const foundUser: User = await this.userRepo.findOne({ username });
-    const foundToken: Token = await this.tokenRepo.findOne({ user: foundUser });
+    const foundUser: UserEntity = await this.userRepo.findOne({ username });
+    const foundToken: TokenEntity = await this.tokenRepo.findOne({ user: foundUser });
     if (foundToken) {
       await this.tokenRepo.remove(foundToken);
     }
@@ -45,7 +45,7 @@ export class UserService {
 
   public async load(token: string): Promise<ResLoad> {
     const username: string = this.utilService.getUsernameByToken(token);
-    const foundUser: User = await this.userRepo.findOne({ username });
+    const foundUser: UserEntity = await this.userRepo.findOne({ username });
     if (!foundUser) {
       throw new ForbiddenException();
     }
@@ -58,7 +58,7 @@ export class UserService {
 
   public async refresh(token: string): Promise<ResRefresh> {
     const username: string = this.utilService.getUsernameByToken(token);
-    const foundToken: Token = await this.tokenRepo.findOne({ refreshToken: token });
+    const foundToken: TokenEntity = await this.tokenRepo.findOne({ refreshToken: token });
 
     if (!username || !foundToken) {
       throw new ForbiddenException();
@@ -72,12 +72,12 @@ export class UserService {
   }
 
   public async signIn(payload: ReqSignIn): Promise<ResSignIn> {
-    const foundUser: User = await this.userRepo.findOne({ username: payload.username });
+    const foundUser: UserEntity = await this.userRepo.findOne({ username: payload.username });
     if (!foundUser || this.utilService.encode(payload.password) !== foundUser.password) {
       throw new ForbiddenException();
     }
 
-    const foundToken: Token = await this.tokenRepo.findOne({ user: foundUser });
+    const foundToken: TokenEntity = await this.tokenRepo.findOne({ user: foundUser });
 
     const result: ResSignIn = { accessToken: null, refreshToken: null };
 
@@ -106,18 +106,18 @@ export class UserService {
   }
 
   public async signOut(token: string): Promise<void> {
-    const foundToken: Token = await this.tokenRepo.findOne({ accessToken: token });
+    const foundToken: TokenEntity = await this.tokenRepo.findOne({ accessToken: token });
     await this.tokenRepo.delete(foundToken);
   }
 
   public async signUp(payload: ReqSignUp): Promise<void> {
-    const foundUser: User = await this.userRepo.findOne({ username: payload.username });
+    const foundUser: UserEntity = await this.userRepo.findOne({ username: payload.username });
     if (foundUser) {
       throw new ConflictException();
     }
 
-    const foundUsers: User[] = await this.userRepo.find({ nickname: payload.nickname });
-    const user: User = new User();
+    const foundUsers: UserEntity[] = await this.userRepo.find({ nickname: payload.nickname });
+    const user: UserEntity = new UserEntity();
 
     Object.assign(user, {
       ...payload,
